@@ -32,6 +32,17 @@ public class PlayerTransformJump : MonoBehaviour
     /// </summary>
     private bool isGrounded = false;
 
+    /// <summary>
+    /// ジャンプの総時間
+    /// </summary>
+    private float jumpTime = 1f;
+
+    /// <summary>
+    /// ジャンプの経過時間
+    /// </summary>
+    private float jumpElapsedTime = 0f;
+
+
     // フレームレートに則って、Game開始時に1回だけ実行される
     // Start is called before the first frame update
     void Start()
@@ -40,6 +51,8 @@ public class PlayerTransformJump : MonoBehaviour
         verticalVelocity = 0f;
         // 初期状態は地面に接地しているのでフラグをたてます
         isGrounded = true;
+        // ジャンプの経過時間を0にします
+        jumpElapsedTime = 0f;
 
     }
 
@@ -58,13 +71,29 @@ public class PlayerTransformJump : MonoBehaviour
             // 地面に接地しているときのフラグをfalseにします
             isGrounded = false;
 
+            // ジャンプの時間をリセット
+            jumpElapsedTime = 0f;
 
 
         }
         // "もし(接地していない)場合、{位置の更新と接地しているかの判定の処理}を行う"
         if (!isGrounded)
         {
-            //1フレームごとに垂直方向の加速度から重力を減算していく
+            // ジャンプ中の経過時間を更新
+            jumpElapsedTime += Time.deltaTime;
+
+
+            // 1フレームごとに垂直方向の加速度から重力を減算していく
+            // この式は、重力が経過時間に比例して速度に与える影響を計算します
+            // 初期速度から始まり、時間と共に重力の影響で速度が減少し、
+            // 最終的には下降に転じます
+            verticalVelocity -= gravity * jumpElapsedTime;
+
+            // 位置の更新は、速度に時間を掛けたものとして計算されます
+            transform.position += new Vector3(0, verticalVelocity * Time.deltaTime,0);　　　　　　　　　　　　
+            
+            
+            
             verticalVelocity -= gravity;
 
             //位置の更新
@@ -80,6 +109,13 @@ public class PlayerTransformJump : MonoBehaviour
                 verticalVelocity = 0;
                 //地面に接地しているときのフラグをtrueにします
                 isGrounded = true;
+            }
+
+            // ジャンプの総秒数以上にジャンプの経過時間が加算された場合
+            if (jumpElapsedTime >= jumpTime)
+            {
+                //垂直方向の加速度を0にして、即座に下降に転じてもらう
+                verticalVelocity = 0;　　　　　　　　　　　　　　　　
             }
 
 
