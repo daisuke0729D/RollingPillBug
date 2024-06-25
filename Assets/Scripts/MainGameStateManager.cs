@@ -28,12 +28,19 @@ public class MainGameStateManager : MonoBehaviour
     /// </summary>
     public float CountDownSec = 3f;
 
+    public PlayerMoveController Player;
+    
+
     // Update is called once per frame
-   private void Update()
+    private void Update()
     {
         switch (GameState)
         {
+   
+
             case GameStates.GameInit:
+
+                Player.CanMove = false;
 
                 GameState = GameStates.GameStart;
                 break;
@@ -52,6 +59,8 @@ public class MainGameStateManager : MonoBehaviour
                 if (CountDownSec < -1)
                 {
                     StartTimeText.text = string.Empty;
+
+                    Player.CanMove = true;
 
                     GameState = GameStates.GameMain;
                 }

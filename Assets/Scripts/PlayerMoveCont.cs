@@ -44,6 +44,9 @@ public class PlayerMoveController : MonoBehaviour
         return MoveSpeed * Time.deltaTime;
     }
 
+    public bool CanMove = true;
+
+
     /// <summary>
     /// void型は何も返さなくていい処理を書く時に使用します
     /// 今回はDebug.Logに"HelloWorld!"と出力する
@@ -73,9 +76,11 @@ public class PlayerMoveController : MonoBehaviour
         // しっかり定量化できます。 
         // 自分の位置情報に対して、
         // x軸に加算させ続ける実装を行っていきます。
-        transform.position +=
-            new Vector3(CulcSpeed(), 0, 0);
-
+        if (CanMove)
+        {
+            transform.position +=
+                new Vector3(CulcSpeed(), 0, 0);
+        }
 
     }
 }
